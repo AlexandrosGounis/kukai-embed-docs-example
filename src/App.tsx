@@ -1,5 +1,5 @@
 import "./styles.css";
-import { KukaiEmbed, LoginInfo, Networks } from "kukai-embed";
+import { KukaiEmbed, LoginInfo, Networks, TypeOfLogin } from "kukai-embed";
 import { useEffect, useRef, useState } from "react";
 
 export default function App() {
@@ -33,8 +33,25 @@ export default function App() {
 
   async function handleClick() {
     try {
-      const user = await kukaiEmbed.current!.login();
+      const user = await kukaiEmbed.current!.login({
+        loginOptions: [
+          TypeOfLogin.Google,
+          TypeOfLogin.Twitter,
+          TypeOfLogin.Facebook,
+          TypeOfLogin.Reddit,
+          "email" as TypeOfLogin,
+        ],
+        wideButtons: [true, true, false, false, false],
+      });
       setUser(user);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      await kukaiEmbed.current!.logout();
     } catch (error) {
       console.log(error);
     }
@@ -46,6 +63,7 @@ export default function App() {
       <button onClick={handleClick} disabled={!isReady}>
         Sign in
       </button>
+      {!!user && <button onClick={handleLogout}>Log out</button>}
     </div>
   );
 }
