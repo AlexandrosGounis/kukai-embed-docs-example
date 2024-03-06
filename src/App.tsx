@@ -52,6 +52,7 @@ export default function App() {
   async function handleLogout() {
     try {
       await kukaiEmbed.current!.logout();
+      setUser(null);
     } catch (error) {
       console.log(error);
     }
@@ -60,9 +61,10 @@ export default function App() {
   return (
     <div className="App">
       <h1>Demo</h1>
-      <button onClick={handleClick} disabled={!isReady}>
+      <button onClick={handleClick} disabled={!isReady || !!user}>
         Sign in
       </button>
+      <hr />
       {!!user && <button onClick={handleLogout}>Log out</button>}
     </div>
   );
